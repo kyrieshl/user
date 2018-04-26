@@ -35,6 +35,8 @@ public class User implements Serializable{
     @NotBlank(message = "头像不能为空！")
     private String userImage;
 
+    private Boolean state;
+
     private Boolean sellerFlag;
 
     public User(){

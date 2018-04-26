@@ -2,13 +2,13 @@ package com.shl.shop.user.service;
 
 import com.shl.shop.user.dao.*;
 import com.shl.shop.user.model.*;
+import com.shl.shop.user.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +27,7 @@ public class UserService {
 
     @Autowired
     private AddressDao addressDao;
+
 
 //    用户注册
     public User userRegister(User user){
@@ -120,16 +121,31 @@ public class UserService {
     }
 
 //    分页查询收藏的所有商家
-   public Page<User> showAllFavoriteSeller(Integer userId, Integer pageNumber, Integer pageSize){
-        List<FavoriteSeller> favoriteSellerList = favoriteSellerDao.findAllByUserId(userId);
-        List<Integer> sellerIdList = new ArrayList<>();
-        favoriteSellerList.forEach(favoriteSeller -> {
-            sellerIdList.add(favoriteSeller.getSellerId());
-        });
-        pageNumber = (pageNumber == null ? 1 : pageNumber);
+   public Page<UserVo> showAllFavoriteSeller(Integer userId, Integer pageNumber, Integer pageSize){
+//        Specification<FavoriteSeller> sellerSpecification = new Specification<FavoriteSeller>() {
+//            @Override
+//            public Predicate toPredicate(Root<FavoriteSeller> root,
+//                                         CriteriaQuery<?> criteriaQuery,
+//                                         CriteriaBuilder criteriaBuilder) {
+//                Path<Integer> _userId = root.get("userId");
+//                Predicate _key = criteriaBuilder.equal(_userId,userId);
+//                return criteriaBuilder.and(_key);
+//            }
+//        };
+        pageNumber = (pageNumber == null ? 1 : pageNumber-1);
         pageSize = (pageSize == null ? 1 : pageSize);
         Pageable pageable = new PageRequest(pageNumber,pageSize, Sort.Direction.DESC,"collectTime");
-        return userDao.findAllByUserIdIn(sellerIdList,pageable);
+        Page<FavoriteSeller> favoriteSellerList = favoriteSellerDao.findAllByUserId(userId,pageable);
+        List<UserVo> userVoList = new ArrayList<>();
+        favoriteSellerList.forEach(favoriteSeller -> {
+            UserVo userVo = new UserVo();
+            userVo.setUserId(userId);
+            userVo.setSeller(userDao.findOne(favoriteSeller.getSellerId()));
+            userVo.setCollectTime(favoriteSeller.getCollectTime());
+            userVoList.add(userVo);
+        });
+        Page page = new PageImpl(userVoList,pageable,userVoList.size());
+        return page;
    }
 
 //    用户收藏商品

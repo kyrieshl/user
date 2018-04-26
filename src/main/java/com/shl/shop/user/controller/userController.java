@@ -6,6 +6,7 @@ import com.shl.shop.user.model.*;
 import com.shl.shop.user.result.Result;
 import com.shl.shop.user.service.UserService;
 import com.shl.shop.user.utils.ResultUtils;
+import com.shl.shop.user.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,7 @@ public class userController {
             return ResultUtils.wrapResult(ResultEnum.FAIL, "用户名已存在！");
         }
         else if (userImage.isEmpty()) {
+            System.out.println("头像为空");
             return ResultUtils.wrapResult(ResultEnum.FAIL, "头像不能为空！");
         }
         else{
@@ -86,6 +88,9 @@ public class userController {
 //                上传头像名
                 String imageName = userImage.getOriginalFilename();
                 File filePath = new File(path,imageName);
+                System.out.println("上传头像路径："+path);
+                System.out.println("上传头像吗："+imageName);
+                System.out.println("filePath:"+filePath);
 //                判断路径是否存在，若不存在则创建
                 if(!filePath.getParentFile().exists()){
                     filePath.getParentFile().mkdirs();
@@ -95,9 +100,17 @@ public class userController {
                 user.setUserImage(path +File.separator + imageName);
 //                设置买家标志位
                 user.setSellerFlag(false);
+//                设置买家状态
+                user.setState(false);
                 return ResultUtils.wrapResult(ResultEnum.SUCCESS, userService.userRegister(user));
             }
         }
+    }
+
+//       获取用户资料
+    @GetMapping("/user/getUser")
+    public Result getUer(@RequestParam("userId") Integer userId){
+        return ResultUtils.wrapResult(ResultEnum.SUCCESS,userService.findByUserId(userId));
     }
 
 //      用户修改密码
@@ -153,12 +166,6 @@ public class userController {
         }
     }
 
-//    获取用户资料
-    @GetMapping("/user/getUser")
-    public Result getUser(@RequestParam("userId") Integer userId) {
-        return ResultUtils.wrapResult(ResultEnum.SUCCESS, userService.findByUserId(userId));
-    }
-
 //    商家退出
     @GetMapping("/user/sellerQuit")
     public Result sellerQuit(){
@@ -179,50 +186,70 @@ public class userController {
        }
     }
 
-//    商家注册
+////    商家注册
+//    @PostMapping("/user/sellerRegister")
+//    public Result sellerRegister(@Valid @ModelAttribute User seller,
+//                                 @RequestParam("sellerImage") MultipartFile sellerImage) throws IOException{
+////        String checkCode2 = (String) session.getAttribute("checkcode");
+////        if (!checkCode1.equalsIgnoreCase(checkCode2))
+////            return ResultUtils.wrapResult(ResultEnum.FAIL, "验证码错误！");
+//        if (userService.findBySellerName(seller.getUserName()) != null) {
+//            return ResultUtils.wrapResult(ResultEnum.FAIL, "用户名已存在！");
+//        }
+//        else if (sellerImage.isEmpty()) {
+//            return ResultUtils.wrapResult(ResultEnum.FAIL, "头像不能为空！");
+//        }
+//        else{
+//            boolean isImg = false;
+//            String[] imgPostfix = {"gif","jpg","jpeg","bmp","png"};
+//            for(String inst : imgPostfix){
+//                if(sellerImage.getContentType().equalsIgnoreCase(inst)) {
+//                    isImg = true;
+//                    break;
+//                }
+//            }
+//            if(!isImg)
+//                return ResultUtils.wrapResult(ResultEnum.FAIL,"头像必须为图片格式！");
+//            else if(sellerImage.getSize() > 10485760)
+//                return ResultUtils.wrapResult(ResultEnum.FAIL,"头像大小不能超过10M");
+//            else {
+////                上传头像路径
+//                String path = request.getServletContext().getRealPath("/images/");
+////                上传头像名
+//                String imageName = sellerImage.getOriginalFilename();
+//                File filePath = new File(path,imageName);
+////                判断路径是否存在，若不存在则创建
+//                if(!filePath.getParentFile().exists()){
+//                    filePath.getParentFile().mkdirs();
+//                }
+////                将头像保存到目标文件中
+//                sellerImage.transferTo(new File(path +File.separator + imageName));
+//                seller.setUserImage(path +File.separator + imageName);
+////                设置商家标志位
+//                seller.setSellerFlag(true);
+////                设置买家状态
+//                seller.setState(false);
+//                return ResultUtils.wrapResult(ResultEnum.SUCCESS, userService.sellerRegister(seller));
+//            }
+//        }
+//    }
+
+    //    商家注册
     @PostMapping("/user/sellerRegister")
-    public Result sellerRegister(@Valid @ModelAttribute User seller,
-                                 @RequestParam("sellerImage") MultipartFile sellerImage) throws IOException{
+    public Result sellerRegister(@Valid @ModelAttribute User seller) throws IOException{
 //        String checkCode2 = (String) session.getAttribute("checkcode");
 //        if (!checkCode1.equalsIgnoreCase(checkCode2))
 //            return ResultUtils.wrapResult(ResultEnum.FAIL, "验证码错误！");
         if (userService.findBySellerName(seller.getUserName()) != null) {
             return ResultUtils.wrapResult(ResultEnum.FAIL, "用户名已存在！");
         }
-        else if (sellerImage.isEmpty()) {
-            return ResultUtils.wrapResult(ResultEnum.FAIL, "头像不能为空！");
-        }
-        else{
-            boolean isImg = false;
-            String[] imgPostfix = {"gif","jpg","jpeg","bmp","png"};
-            for(String inst : imgPostfix){
-                if(sellerImage.getContentType().equalsIgnoreCase(inst)) {
-                    isImg = true;
-                    break;
-                }
-            }
-            if(!isImg)
-                return ResultUtils.wrapResult(ResultEnum.FAIL,"头像必须为图片格式！");
-            else if(sellerImage.getSize() > 10485760)
-                return ResultUtils.wrapResult(ResultEnum.FAIL,"头像大小不能超过10M");
-            else {
-//                上传头像路径
-                String path = request.getServletContext().getRealPath("/images/");
-//                上传头像名
-                String imageName = sellerImage.getOriginalFilename();
-                File filePath = new File(path,imageName);
-//                判断路径是否存在，若不存在则创建
-                if(!filePath.getParentFile().exists()){
-                    filePath.getParentFile().mkdirs();
-                }
-//                将头像保存到目标文件中
-                sellerImage.transferTo(new File(path +File.separator + imageName));
-                seller.setUserImage(path +File.separator + imageName);
+
 //                设置商家标志位
                 seller.setSellerFlag(true);
+//                设置买家状态
+                seller.setState(false);
                 return ResultUtils.wrapResult(ResultEnum.SUCCESS, userService.sellerRegister(seller));
-            }
-        }
+
     }
 
 //    商家修改密码
@@ -282,7 +309,16 @@ public class userController {
     @PostMapping("/user/collectSeller")
     public Result colletSeller(@RequestParam("userId") Integer userId,
                                @RequestParam("sellerId") Integer sellerId){
-        return ResultUtils.wrapResult(ResultEnum.SUCCESS,userService.collectSeller(userId,sellerId));
+        FavoriteSeller favoriteSeller = userService.getFavoriteSeller(userId,sellerId);
+        if(favoriteSeller == null){
+            User seller = userService.findBySellerId(sellerId);
+            if(seller == null)
+                return ResultUtils.wrapResult(ResultEnum.FAIL,"商家不存在！");
+            else
+                return ResultUtils.wrapResult(ResultEnum.SUCCESS,userService.collectSeller(userId,sellerId));
+        }
+        else
+            return ResultUtils.wrapResult(ResultEnum.FAIL,"该收藏记录已存在！");
     }
 
 //    删除收藏的商家
@@ -303,11 +339,11 @@ public class userController {
     public Result showAllFavoriteSeller(@RequestParam("userId") Integer userId,
                                         @RequestParam(value = "pageNumber",required = false) Integer pageNumber){
         pageNumber = pageNumber == null ? 1:pageNumber;
-        Page<User> sellerList = userService.showAllFavoriteSeller(userId,pageNumber,pageSize);
+        Page<UserVo> sellerList = userService.showAllFavoriteSeller(userId,pageNumber,pageSize);
         return ResultUtils.wrapResult(ResultEnum.SUCCESS,sellerList.getContent());
     }
 
-//    获取单个商家/商家资料
+//    获取商家资料
     @GetMapping("/user/getSeller")
     public Result getSeller(@RequestParam("sellerId") Integer sellerId){
         return ResultUtils.wrapResult(ResultEnum.SUCCESS,userService.findBySellerId(sellerId));
