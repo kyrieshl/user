@@ -7,11 +7,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 @Data
 @Table(name = "Address")
 @Entity
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 508730820507727228L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

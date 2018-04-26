@@ -8,11 +8,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 @Data
 @Table(name = "user")
 @Entity
-public class User {
+public class User implements Serializable{
+
+    private static final long serialVersionUID = 857762387830396365L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
