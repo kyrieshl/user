@@ -6,8 +6,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Data
@@ -30,6 +28,7 @@ public class User implements Serializable{
     private String password;
 
     @Email(message = "必须是合法的邮箱！")
+    @NotBlank(message = "邮箱不能为空！" )
     private String email;
 
     @NotBlank(message = "头像不能为空！")

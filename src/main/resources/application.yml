@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url:  jdbc:mysql://localhost:3306/dbshop?characterEncoding=utf-8&useSSL=false
+    url:  jdbc:mysql://111.230.95.117:3306/user?characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -8,3 +8,26 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
+
+
+
+
+client:
+  #远程服务URL地址
+  serviceUrl: http://120.79.69.74:32768/user/remoteService
+  #登录地址
+  loginUrl: http://120.79.69.74:32768/user/login
+  #成功登陆后重定向到的地址
+  successUrl: /pay
+  #未授权重定向到的地址
+  unauthorizedUrl: /test
+  #session id 域名
+  domain: localhost
+  #session id 路径
+  path: /
+  #cookie中的session id名称
+  sessionId: JSESSIONID
+  #过滤器 name=filter-ref;name=filter-ref
+  filters:
+  #过滤器链 格式 url=filters;url=filters
+  filterChainDefinitions: /**=anon

@@ -15,7 +15,7 @@ public class FavoriteProduct implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer favoriteThingId;
+    private Integer favoriteProductId;
 
     private Integer userId;
 

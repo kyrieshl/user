@@ -28,6 +28,9 @@ public class UserService {
     @Autowired
     private AddressDao addressDao;
 
+    @Autowired
+    private FootprintDao footprintDao;
+
 
 //    用户注册
     public User userRegister(User user){
@@ -55,15 +58,11 @@ public class UserService {
     }
 
 //    删除用户
-    public void deleteByUserId(Integer userId) throws Exception {
-        if (userDao.findOne(userId) == null)
-            throw new Exception("用户不存在！");
-        else {
-            addressDao.deleteByUserId(userId);
-            favoriteSellerDao.deleteByUserId(userId);
-            favoriteProductDao.deleteByUserId(userId);
-            userDao.delete(userId);
-        }
+    public void deleteUser(User user) {
+        addressDao.deleteByUserId(user.getUserId());
+        favoriteSellerDao.deleteByUserId(user.getUserId());
+        favoriteProductDao.deleteByUserId(user.getUserId());
+        userDao.delete(user);
     }
 
 //    商家注册
@@ -92,13 +91,9 @@ public class UserService {
     }
 
 //    删除商家
-    public void deleteSeller(Integer sellerId) throws Exception{
-        if(userDao.findOne(sellerId) == null)
-            throw new Exception("商家不存在！");
-        else {
-            favoriteSellerDao.deleteBySellerId(sellerId);
-            userDao.delete(sellerId);
-        }
+    public void deleteSeller(User seller) {
+        favoriteSellerDao.deleteBySellerId(seller.getUserId());
+        userDao.delete(seller);
     }
 
 //    用户收藏商家
@@ -133,7 +128,7 @@ public class UserService {
 //            }
 //        };
         pageNumber = (pageNumber == null ? 1 : pageNumber-1);
-        pageSize = (pageSize == null ? 1 : pageSize);
+        pageSize = (pageSize == null ? 10 : pageSize);
         Pageable pageable = new PageRequest(pageNumber,pageSize, Sort.Direction.DESC,"collectTime");
         Page<FavoriteSeller> favoriteSellerList = favoriteSellerDao.findAllByUserId(userId,pageable);
         List<UserVo> userVoList = new ArrayList<>();
@@ -191,5 +186,24 @@ public class UserService {
    public List<Address> getAllAdress(Integer userId){
         return addressDao.findAllByUserId(userId);
    }
+
+//   通过足迹id查找足迹
+    public Footprint findByFootprintId(Integer footprintId){
+        return footprintDao.findByFootprintId(footprintId);
+    }
+
+//    删除用户足迹
+    public void deleteByFootprint(Footprint footprint){
+        footprintDao.delete(footprint);
+    }
+
+//    查询用户所有足迹
+    public List<Footprint> getAllFootprint(Integer userId,Integer page,Integer pageSize){
+        page = (page == null ? 1 : page - 1);
+        pageSize = (pageSize == null ? 10 : pageSize);
+        Pageable pageable =new PageRequest(page,pageSize, Sort.Direction.DESC,"addTime");
+        List<Footprint> footprints = footprintDao.findAllByUserId(userId,pageable);
+        return footprints;
+    }
 }
 
