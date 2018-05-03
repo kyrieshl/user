@@ -35,7 +35,7 @@ public class userController {
     private Integer size = 10;
 
 //    用户退出
-    @GetMapping("/user/userQuit")
+    @GetMapping("/userQuit")
     public Result userQuit() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
@@ -44,7 +44,7 @@ public class userController {
     }
 
 //    用户登录
-    @PostMapping("/user/userLogin")
+    @PostMapping("/userLogin")
     public Result userLogin(@RequestParam("userName") String userName,
                             @RequestParam("password") String password) {
         User user = userService.findByUserNameAndPassword(userName,password);
@@ -59,7 +59,7 @@ public class userController {
     }
 
 ////      用户注册
-//    @PostMapping("/user/userRegister")
+//    @PostMapping("/userRegister")
 //    public Result userRegister(@Valid @ModelAttribute User user,
 //                           @RequestParam("userImage") MultipartFile userImage) throws IOException {
 ////        String checkCode2 = (String) session.getAttribute("checkcode");
@@ -112,7 +112,7 @@ public class userController {
 
 
 //      用户注册
-    @PostMapping("/user/userRegister")
+    @PostMapping("/userRegister")
     public Result userRegister(@Valid @ModelAttribute User user){
 //        String checkCode2 = (String) session.getAttribute("checkcode");
 //        if (!checkCode1.equalsIgnoreCase(checkCode2))
@@ -131,7 +131,7 @@ public class userController {
     }
 
 //       获取用户资料
-    @GetMapping("/user/getUser")
+    @GetMapping("/getUser")
     public Result getUer(@RequestParam("userId") Integer userId){
         User user = userService.findByUserId(userId);
         if(user == null || user.getSellerFlag())
@@ -141,7 +141,7 @@ public class userController {
     }
 
 //      用户修改密码
-    @PutMapping("/user/updateUserPassword")
+    @PutMapping("/updateUserPassword")
     public Result updateUserPassword(@RequestParam("userId") Integer userId,
                                      @RequestParam("newPassword") String newPassword,
                                      @RequestParam("rePassword") String rePassword) {
@@ -155,7 +155,7 @@ public class userController {
     }
 
 ////    用户修改头像
-//    @PutMapping("/user/updateUserImage")
+//    @PutMapping("/updateUserImage")
 //    public Result updateUserImage(@RequestParam("userId") Integer userId,
 //                           @RequestParam("userImage") MultipartFile userImage) throws IOException {
 //        if (userImage.isEmpty()) {
@@ -194,7 +194,7 @@ public class userController {
 //    }
 
 //    用户修改头像
-    @PutMapping("/user/updateUserImage")
+    @PutMapping("/updateUserImage")
     public Result updateUserImage(@RequestParam("userId") Integer userId,
                                   @RequestParam("userImage") String userImage){
         User user = userService.findByUserId(userId);
@@ -203,7 +203,7 @@ public class userController {
     }
 
 //    删除用户
-    @DeleteMapping("/user/deleteUser")
+    @DeleteMapping("/deleteUser")
     public Result deleteUser(@RequestParam("userId") Integer userId){
         User user = userService.findByUserId(userId);
         if(user == null)
@@ -215,7 +215,7 @@ public class userController {
     }
 
 //    商家退出
-    @GetMapping("/user/sellerQuit")
+    @GetMapping("/sellerQuit")
     public Result sellerQuit(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
@@ -224,7 +224,7 @@ public class userController {
     }
 
 //    商家登录
-    @PostMapping("/user/sellerLogin")
+    @PostMapping("/sellerLogin")
     public Result sellerLogin(@RequestParam("sellerName") String sellerName,
                            @RequestParam("password") String password) {
       User seller = userService.findBySellerNameAndPassword(sellerName,password);
@@ -239,7 +239,7 @@ public class userController {
     }
 
 ////    商家注册
-//    @PostMapping("/user/sellerRegister")
+//    @PostMapping("/sellerRegister")
 //    public Result sellerRegister(@Valid @ModelAttribute User seller,
 //                                 @RequestParam("sellerImage") MultipartFile sellerImage) throws IOException{
 ////        String checkCode2 = (String) session.getAttribute("checkcode");
@@ -287,7 +287,7 @@ public class userController {
 //    }
 
 //      商家注册
-    @PostMapping("/user/sellerRegister")
+    @PostMapping("/sellerRegister")
     public Result sellerRegister(@Valid @ModelAttribute User seller) {
 //        String checkCode2 = (String) session.getAttribute("checkcode");
 //        if (!checkCode1.equalsIgnoreCase(checkCode2))
@@ -304,7 +304,7 @@ public class userController {
     }
 
 //    商家修改密码
-    @PutMapping("/user/updateSellerPassword")
+    @PutMapping("/updateSellerPassword")
     public Result updateSellerPassword(@RequestParam("sellerId") Integer sellerId,
                                        @RequestParam("newPassword") String newPassword,
                                        @RequestParam("rePassword") String rePassword){
@@ -318,7 +318,7 @@ public class userController {
     }
 
 ////    商家修改头像
-//    @PutMapping("user/updateSellerImage")
+//    @PutMapping("/updateSellerImage")
 //    public Result updateSellerImage(@RequestParam("sellerId") Integer sellerId,
 //                                    @RequestParam("sellerImage") MultipartFile sellerImage) throws IOException{
 //        if (sellerImage.isEmpty()) {
@@ -357,7 +357,7 @@ public class userController {
 //    }
 
 //    商家修改头像
-    @PutMapping("user/updateSellerImage")
+    @PutMapping("/updateSellerImage")
     public Result updateSellerImage(@RequestParam("sellerId") Integer sellerId,
                                     @RequestParam("sellerImage") String sellerImage) {
         User seller = userService.findBySellerId(sellerId);
@@ -366,7 +366,7 @@ public class userController {
     }
 
 //    用户收藏商家
-    @PostMapping("/user/collectSeller")
+    @PostMapping("/collectSeller")
     public Result colletSeller(@RequestParam("userId") Integer userId,
                                @RequestParam("sellerId") Integer sellerId){
         FavoriteSeller favoriteSeller = userService.getFavoriteSeller(userId,sellerId);
@@ -382,7 +382,7 @@ public class userController {
     }
 
 //    删除收藏的商家
-    @DeleteMapping("/user/deleteFavoriteSeller")
+    @DeleteMapping("/deleteFavoriteSeller")
     public Result deleteFavoriteSeller(@RequestParam("userId") Integer userId,
                                        @RequestParam("sellerId") Integer sellerId){
         FavoriteSeller favoriteSeller = userService.getFavoriteSeller(userId,sellerId);
@@ -395,7 +395,7 @@ public class userController {
     }
 
 //    分页查询收藏的商家
-    @GetMapping("/user/showAllFavoriteSeller")
+    @GetMapping("/showAllFavoriteSeller")
     public Result showAllFavoriteSeller(@RequestParam("userId") Integer userId,
                                         @RequestParam(value = "page",required = false) Integer page){
         page = (page == null ? 1:page);
@@ -404,7 +404,7 @@ public class userController {
     }
 
 //    获取商家资料
-    @GetMapping("/user/getSeller")
+    @GetMapping("/getSeller")
     public Result getSeller(@RequestParam("sellerId") Integer sellerId){
         User seller = userService.findBySellerId(sellerId);
         if(seller == null || !seller.getSellerFlag())
@@ -414,7 +414,7 @@ public class userController {
     }
 
 //    删除商家
-    @DeleteMapping("/user/deleteSeller")
+    @DeleteMapping("/deleteSeller")
     public Result deleteSeller(@RequestParam("sellerId") Integer sellerId){
         User seller = userService.findByUserId(sellerId);
         if(seller == null)
@@ -426,7 +426,7 @@ public class userController {
     }
 
 //    用户收藏商品
-    @PostMapping("/user/collectProduct")
+    @PostMapping("/collectProduct")
     public Result collectProduct(@RequestParam("userId") Integer userId,
                                  @RequestParam("productId") Integer productId){
         FavoriteProduct favoriteProduct = userService.getFavoriteProduct(userId,productId);
@@ -437,7 +437,7 @@ public class userController {
     }
 
 //    删除收藏的商品
-    @DeleteMapping("/user/deleteFavoriteProduct")
+    @DeleteMapping("/deleteFavoriteProduct")
     public Result deleteFavoriteProduct(@RequestParam("userId") Integer userId,
                                         @RequestParam("productId") Integer productId){
         FavoriteProduct favoriteProduct = userService.getFavoriteProduct(userId,productId);
@@ -452,7 +452,7 @@ public class userController {
 //    分页查询收藏的商品、获取单个商品----------------------
 
 //    增加收货地址（单个用户最多十条收货地址）
-    @PostMapping("/user/addAddress")
+    @PostMapping("/addAddress")
     public Result addAddress(@RequestParam("userId") Integer userId,
                              @Valid @ModelAttribute Address address){
         List<Address> addressList = userService.getAllAdress(userId);
@@ -463,7 +463,7 @@ public class userController {
     }
 
 //    删除收货地址
-    @DeleteMapping("user/deleteAddress")
+    @DeleteMapping("/deleteAddress")
     public Result deleteAddress(@RequestParam("addressId") Integer addressId){
         Address address = userService.findByAddressId(addressId);
         if(address == null)
@@ -475,7 +475,7 @@ public class userController {
     }
 
 //    查看收货地址详细信息
-    @GetMapping("user/getAddress")
+    @GetMapping("/getAddress")
     public Result getAddress(@RequestParam("addressId") Integer addressId){
         Address address = userService.findByAddressId(addressId);
         if(address == null)
@@ -485,13 +485,13 @@ public class userController {
     }
 
 //    查询用户所有收货地址
-    @GetMapping("user/getAllAddress")
+    @GetMapping("/getAllAddress")
     public Result getAllAddress(@RequestParam("userId") Integer userId){
         return ResultUtils.wrapResult(ResultEnum.SUCCESS,userService.getAllAdress(userId));
     }
 
 //    删除用户足迹
-    @DeleteMapping("/user/deleteFootprint")
+    @DeleteMapping("/deleteFootprint")
     public Result deleteFootprint(@RequestParam("userId") Integer userId,
                                   @RequestParam("footprintId") Integer footprintId){
         if(userId == null)
@@ -510,7 +510,7 @@ public class userController {
     }
 
 //    用户足迹列表
-    @GetMapping("/user/getAllfootprint")
+    @GetMapping("/getAllfootprint")
     public Result getAllFootprint(@RequestParam("userId") Integer userId,
                                     @RequestParam(value = "page",defaultValue = "1") Integer page){
         if(userId == null)

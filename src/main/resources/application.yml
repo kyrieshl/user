@@ -9,9 +9,6 @@ spring:
       ddl-auto: update
       show-sql: true
 
-
-
-
 client:
   #远程服务URL地址
   serviceUrl: http://120.79.69.74:32768/user/remoteService
@@ -31,3 +28,7 @@ client:
   filters:
   #过滤器链 格式 url=filters;url=filters
   filterChainDefinitions: /**=anon
+
+server:
+  context-path: /user
+  port: 8005
